@@ -3,20 +3,31 @@ import Enzyme, {
     shallow
 } from 'enzyme';
 import {
-    findByTestAttr
+    findByTestAttr,
+    checkProps
 } from '../../../utils/index';
 import Congrats from './congrats';
 
+const defaultProps = {
+    success: false
+};
+
 const setup = (props = {}) => {
+        const setupProps = {
+            ...defaultProps,
+            ...props
+        }
         return shallow( < Congrats {
-                ...props
+                ...setupProps
             }
             />)
         }
 
         describe('Congrats Component', () => {
             it('Should render without warning', () => {
-                const wrapper = setup();
+                const wrapper = setup({
+                    success: false
+                });
                 const component = findByTestAttr(wrapper, 'component-congrats')
                 expect(component.length).toBe(1)
             });
@@ -38,4 +49,11 @@ const setup = (props = {}) => {
                 const message = findByTestAttr(wrapper, 'congrats-message');
                 expect(message.text().length).not.toBe(0)
             });
+
+            it('Does NOT throw warrning with expected props', () => {
+                const expectProps = {
+                    success: false
+                };
+                checkProps(Congrats, expectProps)
+            })
         });
